@@ -1,0 +1,63 @@
+/* Base Styles (Replaces inline styles) */
+.contact-container {
+    max-width: 800px;
+}
+
+.contact-card {
+    border-radius: 16px;
+}
+
+.contact-header {
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+}
+
+.contact-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    /* Prevents the icon from squeezing on narrow screens */
+}
+
+.contact-text-wrapper {
+    overflow: hidden;
+    /* Helps contain long emails */
+}
+
+/* --- MEDIA QUERIES FOR MOBILE DEVICES --- */
+@media (max-width: 768px) {
+
+    /* Shrink text for smaller screens */
+    .contact-header h2 {
+        font-size: 1.5rem;
+    }
+
+    h4 {
+        font-size: 1.25rem;
+    }
+
+    h5 {
+        font-size: 1.1rem;
+    }
+
+    /* Prevent long email addresses from breaking the layout horizontally */
+    .email-text a {
+        word-break: break-all;
+        font-size: 1rem;
+    }
+
+    /* Slightly reduce icon size */
+    .contact-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+
+    /* Make the WhatsApp button scale better on small phones */
+    .whatsapp-btn {
+        width: 100%;
+        font-size: 1rem;
+        padding: 0.75rem !important;
+    }
+}
