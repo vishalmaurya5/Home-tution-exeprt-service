@@ -13,7 +13,9 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 // const clientDistPath = path.resolve(__dirname, "../../client/dist");
-const clientDistPath = path.join(process.cwd(), "client", "dist");
+// This tells Express: "Start at the root of the project, then go into client/dist"
+const clientDistPath = path.join(process.cwd(), "..", "client", "dist");
+
 
 
 // This allows both your local dev and your new live Render site
