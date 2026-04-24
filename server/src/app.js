@@ -12,7 +12,9 @@ import { errorHandler, notFound } from "./middleware/errorHandler.js";
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const clientDistPath = path.resolve(__dirname, "../../client/dist");
+// const clientDistPath = path.resolve(__dirname, "../../client/dist");
+const clientDistPath = path.join(process.cwd(), "client", "dist");
+
 
 const allowedOrigins = (process.env.CORS_ORIGIN || "http://localhost:5173")
   .split(",")
@@ -46,11 +48,27 @@ app.use("/api/auth", authRoutes);
 app.use("/api/tutors", tutorRoutes);
 app.use("/api/tuitions", tuitionRoutes);
 
+// if (process.env.NODE_ENV === "production") {
+//   app.use(express.static(clientDistPath));
+
+//   app.get(/^\/(?!api|uploads).*/, (_req, res) => {
+//     res.sendFile(path.join(clientDistPath, "index.html"));
+//   });
+// }
+
 if (process.env.NODE_ENV === "production") {
+  // Serve static files
   app.use(express.static(clientDistPath));
 
-  app.get(/^\/(?!api|uploads).*/, (_req, res) => {
-    res.sendFile(path.join(clientDistPath, "index.html"));
+  // Catch-all for React Router, excluding API and Uploads
+  app.get(/^\/(?!api|uploads).*/, (req, res) => {
+    res.sendFile(path.join(clientDistPath, "index.html"), (err) => {
+      if (err) {
+        // This will print the EXACT path error in your Render logs if it fails again
+        console.error("Error sending index.html:", err);
+        res.status(500).send(err.message);
+      }
+    });
   });
 }
 
