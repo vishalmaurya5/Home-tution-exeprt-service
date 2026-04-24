@@ -16,22 +16,28 @@ const __dirname = path.dirname(__filename);
 const clientDistPath = path.join(process.cwd(), "client", "dist");
 
 
-const allowedOrigins = (process.env.CORS_ORIGIN || "http://localhost:5173")
-  .split(",")
-  .map((origin) => origin.trim())
-  .filter(Boolean);
+// This allows both your local dev and your new live Render site
+const allowedOrigins = [
+  "http://localhost:5173", 
+  "https://home-tution-exeprt-service-1.onrender.com" // Add your EXACT live URL here
+];
 
 app.use(
   cors({
-    origin(origin, callback) {
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl) 
+      // or if the origin is in our allowed list
       if (!origin || allowedOrigins.includes(origin)) {
-        return callback(null, true);
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
       }
-      return callback(new Error("Not allowed by CORS"));
     },
-    credentials: true
+    credentials: true,
+    optionsSuccessStatus: 200 // Fixes some browser compatibility issues
   })
 );
+
 app.use(express.json());
 app.use(morgan("dev"));
 app.use("/uploads", express.static(uploadsDir));
