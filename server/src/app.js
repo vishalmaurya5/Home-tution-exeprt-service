@@ -12,9 +12,7 @@ import { errorHandler, notFound } from "./middleware/errorHandler.js";
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-// const clientDistPath = path.resolve(__dirname, "../../client/dist");
-// This tells Express: "Start at the root of the project, then go into client/dist"
-const clientDistPath = path.join(process.cwd(), "..", "client", "dist");
+const clientDistPath = path.resolve(process.cwd(), "..", "client", "dist");
 
 
 
@@ -65,16 +63,14 @@ app.use("/api/tuitions", tuitionRoutes);
 // }
 
 if (process.env.NODE_ENV === "production") {
-  // Serve static files
   app.use(express.static(clientDistPath));
 
-  // Catch-all for React Router, excluding API and Uploads
   app.get(/^\/(?!api|uploads).*/, (req, res) => {
+    // This will now look in /opt/render/project/src/client/dist
     res.sendFile(path.join(clientDistPath, "index.html"), (err) => {
       if (err) {
-        // This will print the EXACT path error in your Render logs if it fails again
-        console.error("Error sending index.html:", err);
-        res.status(500).send(err.message);
+        console.error("DEBUG - Path attempted:", clientDistPath);
+        res.status(500).send("Frontend files not found.");
       }
     });
   });
